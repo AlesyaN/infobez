@@ -10,6 +10,7 @@ import ru.itis.infobezroles.models.User;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
@@ -22,7 +23,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getGrantedAuthorities(getPrivileges(user.getRoles()));
+        return getGrantedAuthorities(getPrivileges(user.getRole()));
     }
 
     private Collection<? extends GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
@@ -31,16 +32,11 @@ public class UserDetailsImpl implements UserDetails {
                 .collect(Collectors.toList());
     }
 
-    private List<String> getPrivileges(Collection<Role> roles) {
-        List<String> privileges = new ArrayList<>();
-        List<Privilege> collection = new ArrayList<>();
-        for (Role role : roles) {
-            collection.addAll(role.getPrivileges());
-        }
-        for (Privilege item : collection) {
-            privileges.add(item.getName());
-        }
-        return privileges;
+    private List<String> getPrivileges(Role roles) {
+        return roles.getPrivileges()
+                .stream()
+                .map(Privilege::getName)
+                .collect(Collectors.toList());
     }
 
     @Override

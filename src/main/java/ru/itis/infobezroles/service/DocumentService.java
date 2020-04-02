@@ -25,7 +25,7 @@ public class DocumentService {
     private DocumentRepository documentRepository;
 
 
-    public ResponseEntity getResponseWithFileToDownload(Long fileId, HttpServletRequest request) {
+    public ResponseEntity<Resource> getResponseWithFileToDownload(Long fileId, HttpServletRequest request) {
         Document document = documentRepository.findById(fileId).orElseThrow(IllegalArgumentException::new);
         Path path = Paths.get(document.getPath());
         Resource resource = null;

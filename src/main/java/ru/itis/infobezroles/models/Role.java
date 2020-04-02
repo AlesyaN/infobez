@@ -1,12 +1,16 @@
 package ru.itis.infobezroles.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role {
 
     @Id
@@ -15,7 +19,7 @@ public class Role {
 
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
+    @OneToMany(mappedBy = "role")
     private List<User> users;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -26,4 +30,8 @@ public class Role {
             inverseJoinColumns = @JoinColumn(
                     name = "privilege_id", referencedColumnName = "id"))
     private List<Privilege> privileges;
+
+    public Role(String name) {
+        this.name = name;
+    }
 }
